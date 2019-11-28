@@ -19,11 +19,6 @@ body{
 <body>
 <!----JS FUNCTIONS---->
 <script>
-function returnData(data)
-{
-    alert(data);
-}
-
 
 function showStart() 
 {
@@ -36,9 +31,7 @@ function showStart()
                     alert("Playing");
 
                     var audio = document.getElementById("music");
-                    //while(!musicLoaded){}
-                    //audio.play();
-                    //while(!document.getElementById("music").ended){}
+                    audio.play();
                 }
                 else
                 {

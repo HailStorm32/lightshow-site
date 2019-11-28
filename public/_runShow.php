@@ -6,28 +6,14 @@ function canRun()
     fclose($myfile);
     $targetTime = $fileValue;
 
-    //reset the file if the time has passed
     if(idate("U") >= $targetTime)
     {
-        $myfile = fopen("show_last_run.txt","w");
-        fwrite($myfile,"z"); 
-        fclose($myfile);
-        //echo "1";
         return true;
     }
     else
     {
         return false;
     }
-
-    /*$myfile = fopen("show_last_run.txt","r");
-    $fileValue = fread($myfile, filesize("show_last_run.txt"));
-    fclose($myfile);
-
-    if($fileValue == "zHas_ran")
-    {
-        return false;
-    }*/
 }
 
 function setShowTimer()
@@ -38,18 +24,28 @@ function setShowTimer()
     $myfile = fopen("variables.txt","w");
     fwrite($myfile,$targetTime); 
     fclose($myfile);
-
-
-    /*$myfile = fopen("show_last_run.txt","w");
-    fwrite($myfile,"zHas_ran"); 
-    fclose($myfile);*/
 }
 
 
 if(canRun())
 {
+    $myfile = fopen("showStart.txt","w");
+    fwrite($myfile, "start");
+    fclose($myfile);
     setShowTimer();
+
+/*    $myfile = fopen("showStart.txt","r");
+    while($fileContents != "read")
+    {
+        $fileContents = fgets($myfile);
+    }
+    fclose($myfile);*/
+
     echo "1";
+
+    $myfile = fopen("showStart.txt","w");
+    fwrite($myfile, " ");
+    fclose($myfile);
 }
 else
 {
