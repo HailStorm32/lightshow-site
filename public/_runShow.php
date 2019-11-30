@@ -29,17 +29,21 @@ function setShowTimer()
 
 if(canRun())
 {
+
     $myfile = fopen("showStart.txt","w");
     fwrite($myfile, "start");
     fclose($myfile);
     setShowTimer();
 
-/*    $myfile = fopen("showStart.txt","r");
+    $fileContents = "null";
+
+
     while($fileContents != "read")
     {
+        $myfile = fopen("showStart.txt","r");
         $fileContents = fgets($myfile);
+        fclose($myfile);
     }
-    fclose($myfile);*/
 
     echo "1";
 
