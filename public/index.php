@@ -28,7 +28,7 @@ function showStart()
                 //alert(test);
                 if(test == 1)
                 {
-                    alert("Playing");
+                   // alert("Playing");
 
                     var audio = document.getElementById("music");
                     audio.play();
