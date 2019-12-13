@@ -19,7 +19,7 @@ function canRun()
 function setShowTimer()
 {
     $startTime = idate("U");
-    $targetTime = $startTime + 60;
+    $targetTime = $startTime + 159;
 
     $myfile = fopen("variables.txt","w");
     fwrite($myfile,$targetTime); 
