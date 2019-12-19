@@ -1,5 +1,3 @@
-<!DOCTYPE HTML>
-
 <html>
 <head>
 <style>
@@ -18,6 +16,11 @@ body{
     position:relative;
     left:50px;
     top:400px;
+}
+#login{
+    position:absolute;
+    left:1500px;
+    top:10px;
 }
 </style>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
@@ -71,7 +74,9 @@ body{
 
 
 <p>Welcome</p>
-        
+
+<a id="login" href="https://www.villardlight.show/login.php">Login</a> 
+
 <button id="loadMusicBtn" onclick="loadSound();">Load Music</button>
 
 <button id="submitBtn">Start Show</button>
@@ -82,22 +87,5 @@ body{
 document.getElementById("submitBtn").addEventListener("click", showStart);
 document.getElementById("loadMusicBtn").addEventListener("click", showSubmit);
 </script>
-
-
-
-
-
-<!--<audio id="music" src="carolOfTheBells.mp3" preload="auto" ></audio>--->
-
-
-
-
-
-
-
-
-
-
-
 </body>
 </html>
