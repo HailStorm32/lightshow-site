@@ -27,7 +27,7 @@ require'../config.php';
 
 $loginFail = FALSE;
 
-if(isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response']))
+if($_SERVER["REQUEST_METHOD"] == "POST")
 {
     $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.RECAPTCHA_SECRET_KEY.'&response='.$_POST['g-recaptcha-response']);
 
@@ -46,7 +46,7 @@ if(isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response'
         //Check connection to the database
         if(!$con)
         {
-            die("connection to database failed:".mysqli_connect_error());
+            die("connection to database failed:");
         }
         
         //make sure fields were filled out

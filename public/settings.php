@@ -90,13 +90,26 @@ $con = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
 //Check connection to the database
 if(!$con)
 {
-    die("connection to database failed:".mysqli_connect_error());
+    die("connection to database failed:");
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
-    
-    
+    if($stmt = $con->prepare('UPDATE channels SET state = ? WHERE channel = ?'))
+    {
+        for($i = 1; $i < 9; $i++)//start count on 1 b/c channels start at 1
+        {
+            $channel = "ch".$i;
+            $stmt->bind_param('ss',$_POST["ch".$i],$channel);   
+            $stmt->execute(); 
+        }
+    }
+    else
+    {
+        die("Could not prepare statement!");
+    }
+    $stmt->close();
+
     updateBtns(); 
 }
 else
@@ -157,6 +170,8 @@ function updateBtns()
     {
         die("Error: rows < 0");
     }
+
+    $con->close();
 }
 
 ?>
