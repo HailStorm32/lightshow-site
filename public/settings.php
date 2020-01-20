@@ -1,29 +1,33 @@
-<?php
-session_start();
-
-if(!isset($_SESSION['loggedin']))
-{
-    header('Location: index.php');
-    exit();
-}
-?>
-
-<html>
-<head>
-    <title>Light Controls</title>
-    <script>
-        function submitForm()
+<?php 
+session_start(); 
+if(!isset($_SESSION['loggedin'])) 
+{ 
+    header('Location: index.php'); 
+    exit(); 
+} 
+?> 
+<html> 
+<head> 
+    <title>Light Controls</title> 
+    <script> 
+        function submitRadioForm()
         {
-            //alert("test");
-            document.getElementById("chSwitch").submit();
+            document.getElementById("radioSwitches").submit();
         }
-        
     </script>
+    <style>
+    #sysStatBtns
+    {
+        position: relative;
+        left: 500px;
+        top: -500px;
+    }
+    </style>
 </head>
 <body>
     <p>Wellcome!</p>
 
-    <form id="chSwitch" method="POST">
+    <form id="radioSwitches" method="POST">
         <p>Channel 1 control:</p>
         <input id="ch1_on" type="radio" name="ch1" value="on">On</input>
         <input id="ch1_off" type="radio" name="ch1" value="off">Off</input>
@@ -55,7 +59,14 @@ if(!isset($_SESSION['loggedin']))
         <p>Channel 8 control:</p>
         <input id="ch8_on" type="radio" name="ch8" value="on">On</input>
         <input id="ch8_off" type="radio" name="ch8" value="off">Off</input>
+
+        <div id="sysStatBtns"> 
+        <p>Turn ON/OFF light display system</p>
+        <input id="sysOn" type="radio" name="sysStat" value="on">On</input>
+        <input id="sysOff" type="radio" name="sysStat" value="off">Off</input>
+        </div>
     </form>
+        
 
 <script>
     var chRadioBtns = [];
@@ -73,9 +84,12 @@ if(!isset($_SESSION['loggedin']))
     {
         for(var i = 0; i < 2; i++)
         {
-            chRadioBtns[chNum][i].addEventListener("click", submitForm);
+            chRadioBtns[chNum][i].addEventListener("click", submitRadioForm);
         }
     }
+
+    document.getElementById("sysOn").addEventListener("click", submitRadioForm);
+    document.getElementById("sysOff").addEventListener("click", submitRadioForm);
 </script>
 </body>
 </html>
@@ -95,6 +109,7 @@ if(!$con)
 
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
+    //Update the channel states in the data base
     if($stmt = $con->prepare('UPDATE channels SET state = ? WHERE channel = ?'))
     {
         for($i = 1; $i < 9; $i++)//start count on 1 b/c channels start at 1
@@ -110,14 +125,29 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     }
     $stmt->close();
 
-    updateBtns(); 
+    updateRadioBtns();
+
+    //Update the system state in the data base
+    if($stmt = $con->prepare('UPDATE variables SET Value = ? WHERE Name = ?'))
+    {
+        $name = "systemState";
+        $stmt->bind_param('ss',$_POST["sysStat"],$name);   
+        $stmt->execute(); 
+    }
+    else
+    {
+        die("Could not prepare statement!");
+    }
+    $stmt->close();
+
+    updateRadioBtns();
 }
 else
 {
-    updateBtns();
+    updateRadioBtns();
 }
 
-function updateBtns()
+function updateRadioBtns()
 {
     $con = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
 
@@ -163,6 +193,45 @@ function updateBtns()
 
                 echo("<script>document.getElementById('".$id."')
                     .removeAttribute('checked');</script>");
+            }
+        }
+    }
+    else
+    {
+        die("Error: rows < 0");
+    }
+    
+    //Update the radio btns from variables table 
+    $result = $con->query("SELECT * FROM variables");
+
+    if($result->num_rows > 0)
+    {
+        while($row = $result->fetch_assoc())
+        {
+            if($row["Name"] === "systemState")
+            {
+                if($row["Value"] === "off")
+                {
+                    //set the 'off' radio btn
+                    echo("<script>document.getElementById('sysOff')
+                        .setAttributeNode(
+                            document.createAttribute('checked'));</script>");
+
+                    //unset the 'on' radio btn
+                    echo("<script>document.getElementById('sysOn')
+                        .removeAttribute('checked');</script>");
+                }
+                else if($row["Value"] === "on")
+                {
+                    //set the 'on' radio btn
+                    echo("<script>document.getElementById('sysOn')
+                        .setAttributeNode(
+                            document.createAttribute('checked'));</script>");
+
+                    //unset the 'off' radio btn
+                    echo("<script>document.getElementById('Off')
+                        .removeAttribute('checked');</script>");
+                }
             }
         }
     }

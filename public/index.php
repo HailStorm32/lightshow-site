@@ -18,9 +18,9 @@ body{
     top:400px;
 }
 #login{
-    position:absolute;
-    left:1500px;
-    top:10px;
+    position:relative;
+    left: 1000;
+    top:0px;
 }
 </style>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
