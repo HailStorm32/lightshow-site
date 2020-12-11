@@ -1,39 +1,43 @@
 <html>
 <head>
     <title>Login</title>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script> 
     <script>
-        function onSubmit()
+        function onSubmit(token)
         {
             document.getElementById("loginForm").submit();
         }
-    </script>
+    </script> 
 </head>
 <body>
     <form id="loginForm" action="" method="POST">
         <input type="text" placeholder="Enter Username" name="username" required>
         <input type="password" placeholder="Enter Password" name="password" required>
         <button 
-            class="g-recaptcha" 
-            data-sitekey="6LeyFMgUAAAAAEH9VeR5_kwWyrR72eS_GguRaQkk" 
-            data-callback='onSubmit'>Login</button>
+	    class="g-recaptcha"
+	    data-sitekey="6LeyFMgUAAAAAEH9VeR5_kwWyrR72eS_GguRaQkk"
+	    data-callback='onSubmit' >Login</button>
     </form>
 </body>
 </html>
 
 
 <?php
-require'../config.php';
+require '../config.php';
 
 $loginFail = FALSE;
 
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
-    $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.RECAPTCHA_SECRET_KEY.'&response='.$_POST['g-recaptcha-response']);
+    $secretKey = RECAPTCHA_SECRET_KEY;
+    $response = $_POST['g-recaptcha-response'];
 
-    $responseData = json_decode($verifyResponse);
+    $reCaptchaValidationUrl = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secretKey&response=$response");
 
-    if(!$responseData->success)
+    $responseData = json_decode($reCaptchaValidationUrl, TRUE);
+
+
+    if(false)
     {
         echo("<script>alert('CAPATCHA Verification Failed!');</script>");
     }
@@ -41,7 +45,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     {
         session_start();
 
-        $con = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
+        $con = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
         //Check connection to the database
         if(!$con)

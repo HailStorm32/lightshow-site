@@ -99,7 +99,7 @@ if(!isset($_SESSION['loggedin']))
 require'../config.php';
 
 
-$con = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
+$con = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
 //Check connection to the database
 if(!$con)
@@ -128,7 +128,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     updateRadioBtns();
 
     //Update the system state in the data base
-    if($stmt = $con->prepare('UPDATE variables SET Value = ? WHERE Name = ?'))
+    if($stmt = $con->prepare('UPDATE variables SET value = ? WHERE variable = ?'))
     {
         $name = "systemState";
         $stmt->bind_param('ss',$_POST["sysStat"],$name);   
@@ -208,9 +208,9 @@ function updateRadioBtns()
     {
         while($row = $result->fetch_assoc())
         {
-            if($row["Name"] === "systemState")
+            if($row["variable"] === "systemState")
             {
-                if($row["Value"] === "off")
+                if($row["value"] === "off")
                 {
                     //set the 'off' radio btn
                     echo("<script>document.getElementById('sysOff')
@@ -221,7 +221,7 @@ function updateRadioBtns()
                     echo("<script>document.getElementById('sysOn')
                         .removeAttribute('checked');</script>");
                 }
-                else if($row["Value"] === "on")
+                else if($row["value"] === "on")
                 {
                     //set the 'on' radio btn
                     echo("<script>document.getElementById('sysOn')
