@@ -42,21 +42,21 @@ body{
     {
         if(createjs.Sound.loadComplete(soundID))
         {
-        $.post("_runShow.php", {nul: "nul"}, 
-            function(test)
-            {
-                if(test == 1)
+            $.post("_runShow.php", {nul: "nul"}, 
+                function(test)
                 {
-                    //alert("Playing");
+                    if(test == 1)
+                    {
+                        alert("Playing");
 
-                    playSound();
-                }
-                else
-                {
-                    alert("Show already playing!");
-                }
-            } );  
-        }
+                        playSound();
+                    }
+                    else
+                    {
+                        alert("Show already playing!");
+                    }
+                } );  
+        } 
         else
         {
             alert("Music still loading, please try again in 12 seconds.");
